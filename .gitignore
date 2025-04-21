@@ -1,0 +1,25 @@
+# Node.js / Backend (Server)
+server/node_modules/
+server/.env
+server/npm-debug.log
+server/yarn-error.log
+server/build/
+server/dist/
+server/.vscode/
+server/.idea/
+
+# Frontend (Client)
+client/node_modules/
+client/build/
+client/.env
+client/npm-debug.log
+client/yarn-error.log
+client/.vscode/
+client/.idea/
+
+# OS-Specific Files
+.DS_Store
+Thumbs.db
+
+# Log Files
+*.log
