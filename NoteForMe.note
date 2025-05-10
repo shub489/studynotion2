@@ -1,0 +1,14 @@
+Cloud name	dfr4tceci
+API key	 755259598916263
+API secret	 t_ZRTsGz-qXIfBFhdSFghdrUIjM
+API environment variable	CLOUDINARY_URL=cloudinary://755259598916263:t_ZRTsGz-qXIfBFhdSFghdrUIjM@dfr4tceci
+
+
+const cloudinary = require('cloudinary');
+
+cloudinary.v2.config({
+  cloud_name: 'dfr4tceci',
+  api_key: '755259598916263',
+  api_secret: '<your_api_secret>',
+  secure: true,
+});

@@ -18,7 +18,7 @@ const auth = async (req, res, next) => {
 
     try {
       const decoded = jwt.verify(token, process.env.JWT_SECRET);
-      console.log(decoded);
+      // console.log(decoded);
       req.user = decoded;
       return next();
     } catch (error) {
@@ -39,7 +39,7 @@ const auth = async (req, res, next) => {
 
 //isStudent
 const isStudent = (req, res, next) => {
-  if (req.user.role === "Student") {
+  if (req?.user?.accountType === "Student") {
     return next();
   }
 
@@ -51,7 +51,8 @@ const isStudent = (req, res, next) => {
 
 //isInstructor
 const isInstructor = (req, res, next) => {
-  if (req.user.role === "Instructor") {
+  console.log("accountType", req.user.accountType);
+  if (req?.user?.accountType === "Instructor") {
     return next();
   }
 
@@ -63,10 +64,9 @@ const isInstructor = (req, res, next) => {
 
 //isAdmin
 const isAdmin = (req, res, next) => {
-  if (req.user.role === "Admin") {
+  if (req?.user?.accountType === "Admin") {
     return next();
   }
-
   return res.status(403).json({
     success: false,
     message: "Access denied - Only Admin are allowed",
