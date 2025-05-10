@@ -15,6 +15,16 @@ const {
   showAllCategory,
 } = require("./controllers/Category.js");
 const { createCourse, getAllCourses } = require("./controllers/Course.js");
+const {
+  createSection,
+  updateSection,
+  deleteSection,
+} = require("./controllers/Section.js");
+const { createSubsection } = require("./controllers/Subsection.js");
+const {
+  updateProfile,
+  getAllUserDetails,
+} = require("./controllers/Profile.js");
 const app = express();
 
 require("dotenv").config();
@@ -90,6 +100,18 @@ app.post(
   createCourse
 );
 app.get("/allCourses", getAllCourses);
+
+// Section
+app.post("/createSection", createSection);
+app.post("/updateSection", updateSection);
+app.post("/deleteSection", deleteSection);
+
+// Subsection
+app.post("/createSubsection", upload.single("videoFile"), createSubsection);
+
+// Profile
+app.patch("/updateProfile", auth, updateProfile);
+app.get("/getAllUserDetails", auth, getAllUserDetails);
 
 app.listen(PORT, () => {
   console.log(`App is listening on port ${PORT}`);
