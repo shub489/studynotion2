@@ -14,7 +14,11 @@ const {
   createCategory,
   showAllCategory,
 } = require("./controllers/Category.js");
-const { createCourse, getAllCourses } = require("./controllers/Course.js");
+const {
+  createCourse,
+  getAllCourses,
+  getCourseDetails,
+} = require("./controllers/Course.js");
 const {
   createSection,
   updateSection,
@@ -92,6 +96,8 @@ app.post("/resetpasswordtoken", resetPasswordToken);
 app.post("/resetpassword", resetPassword);
 app.post("/createCategory", auth, isAdmin, createCategory);
 app.get("/showallCategory", showAllCategory);
+
+// Course
 app.post(
   "/createCourse",
   auth,
@@ -100,6 +106,7 @@ app.post(
   createCourse
 );
 app.get("/allCourses", getAllCourses);
+app.get("/getCourseDetails", getCourseDetails);
 
 // Section
 app.post("/createSection", createSection);

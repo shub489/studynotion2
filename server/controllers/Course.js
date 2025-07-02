@@ -3,6 +3,7 @@ const cloudinary = require("cloudinary").v2;
 const Course = require("../models/Course");
 const User = require("../models/User");
 const Category = require("../models/Category");
+const RatingAndReview = require("../models/RatingAndReview");
 require("dotenv").config();
 
 const createCourse = async (req, res) => {
@@ -146,7 +147,65 @@ const getAllCourses = async (req, res) => {
   }
 };
 
+// Get course details
+const getCourseDetails = async (req, res) => {
+  try {
+    const { courseId } = req.body;
+    if (!courseId) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid request: courseId not found",
+      });
+    }
+
+    let course = await Course.findById(courseId).populate([
+      {
+        path: "instructor",
+        populate: {
+          path: "additionalDetails",
+        },
+      },
+      {
+        path: "courseContent",
+        populate: {
+          path: "subSection",
+        },
+      },
+      {
+        path: "ratingAndReviews",
+      },
+      {
+        path: "category",
+      },
+      {
+        path: "studentsEnrolled",
+      },
+    ]);
+
+    if (!course) {
+      return res.status(404).json({
+        success: false,
+        message: "Course not found",
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: "Course details found",
+      course,
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error",
+      error: error.message,
+    });
+  }
+};
+
 module.exports = {
   createCourse,
   getAllCourses,
+  getCourseDetails,
 };
