@@ -2,53 +2,33 @@ const express = require("express");
 const cookieParser = require("cookie-parser");
 const cloudinary = require("cloudinary").v2; // Cloudinary
 const multer = require("multer"); // Multer for handling file uploads
-const { cloudinaryConnect } = require("./config/cloudinary.js");
-const { connect } = require("./config/database.js");
-const { sendOTP, signUp, login } = require("./controllers/Auth.js");
-const {
-  resetPasswordToken,
-  resetPassword,
-} = require("./controllers/ResetPassword.js");
-const { isAdmin, auth, isInstructor } = require("./middlewares/auth.js");
-const {
-  createCategory,
-  showAllCategory,
-} = require("./controllers/Category.js");
-const {
-  createCourse,
-  getAllCourses,
-  getCourseDetails,
-} = require("./controllers/Course.js");
-const {
-  createSection,
-  updateSection,
-  deleteSection,
-} = require("./controllers/Section.js");
-const { createSubsection } = require("./controllers/Subsection.js");
-const {
-  updateProfile,
-  getAllUserDetails,
-} = require("./controllers/Profile.js");
+const cors = require("cors");
+
+/* Initialize Express application */
 const app = express();
 
+/* Setup for access to .env file constants */
 require("dotenv").config();
 
-app.use(express.json());
-app.use(cookieParser());
-const PORT = process.env.PORT || 8000;
+/* Cloudinary connection */
+const { cloudinaryConnect } = require("./config/cloudinary.js");
+
+/* Database connection */
+const { connect } = require("./config/database.js");
 connect();
 
-// Multer SETUP
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, "uploads/"); // Directory where the uploaded file will be stored temporarily
-  },
-  filename: (req, file, cb) => {
-    cb(null, `${Date.now()}_${file.originalname}`); // The original name of the uploaded file
-  },
-});
+/* Middlewares */
+app.use(express.json());
+app.use(cookieParser());
+app.use(
+  cors({
+    origin: "http://localhost:3000",
+    credentials: true,
+  })
+);
 
-const upload = multer({ storage: storage });
+/* PORT define */
+const PORT = process.env.PORT || 8000;
 
 // 4. API endpoint to upload image to Cloudinary
 // app.post("/addCourse", upload.single("thumbnail"), async (req, res) => {
@@ -86,40 +66,41 @@ const upload = multer({ storage: storage });
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-app.get("/", (req, res) => {
-  res.send("Route working");
-});
-app.post("/sendotp", sendOTP);
-app.post("/signup", signUp);
-app.post("/login", login);
-app.post("/resetpasswordtoken", resetPasswordToken);
-app.post("/resetpassword", resetPassword);
-app.post("/createCategory", auth, isAdmin, createCategory);
-app.get("/showallCategory", showAllCategory);
-
-// Course
-app.post(
-  "/createCourse",
-  auth,
-  isInstructor,
-  upload.single("thumbnail"),
-  createCourse
-);
-app.get("/allCourses", getAllCourses);
-app.get("/getCourseDetails", getCourseDetails);
-
-// Section
-app.post("/createSection", createSection);
-app.post("/updateSection", updateSection);
-app.post("/deleteSection", deleteSection);
-
-// Subsection
-app.post("/createSubsection", upload.single("videoFile"), createSubsection);
-
 // Profile
-app.patch("/updateProfile", auth, updateProfile);
-app.get("/getAllUserDetails", auth, getAllUserDetails);
 
+// Routes
+
+/* Routes Fetch */
+const userRoutes = require("./routes/User.js");
+const courseRoutes = require("./routes/Course.js");
+const profileRoutes = require("./routes/Profile.js");
+const paymentRoutes = require("./routes/Payment");
+const sectionRoutes = require("./routes/Section.js");
+const subSectionRoutes = require("./routes/SubSection.js");
+const resetRoutes = require("./routes/ResetPassword.js");
+const categoryRoutes = require("./routes/Category.js");
+const ratingAndReviewRoutes = require("./routes/RatingAndReview.js");
+
+/* Routes Mapping-Mounting */
+app.use("/api/v1/auth", userRoutes);
+app.use("/api/v1/profile", profileRoutes);
+app.use("/api/v1/payment", paymentRoutes);
+app.use("/api/v1/course", courseRoutes);
+app.use("/api/v1/section", sectionRoutes);
+app.use("/api/v1/sub-section", subSectionRoutes);
+app.use("/api/v1/reset", resetRoutes);
+app.use("/api/v1/category", categoryRoutes);
+app.use("/api/v1/rating-and-review", ratingAndReviewRoutes);
+
+/* Default Routes */
+app.get("/", (req, res) => {
+  res.json({
+    success: true,
+    message: "Your server is up and running",
+  });
+});
+
+/* Server Activation */
 app.listen(PORT, () => {
   console.log(`App is listening on port ${PORT}`);
 });

@@ -41,7 +41,7 @@ const sendOTP = async (req, res) => {
   if (isEmailExist) {
     return res.status(409).json({
       success: false,
-      message: "User already exixt",
+      message: "OTP already sent",
     });
   }
 
@@ -84,9 +84,9 @@ const signUp = async (req, res) => {
       firstName: Joi.string().min(2).max(50).required(),
       lastName: Joi.string().min(2).max(50).required(),
       email: Joi.string().email().required(),
-      mobile: Joi.string()
-        .pattern(/^[0-9]{10}$/)
-        .required(),
+      // mobile: Joi.string()
+      //   .pattern(/^[0-9]{10}$/)
+      //   .required(),
       password: Joi.string().min(6).required(),
       accountType: Joi.string()
         .valid("Admin", "Student", "Instructor")
@@ -113,6 +113,7 @@ const signUp = async (req, res) => {
     }
 
     const recentOtpList = await OTP.find({ email }).sort({ createdAt: -1 });
+    console.log("recentOtpList : ", recentOtpList);
 
     if (!recentOtpList || !recentOtpList.length) {
       return res.status(400).json({

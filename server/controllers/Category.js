@@ -49,7 +49,7 @@ const createCategory = async (req, res) => {
   }
 };
 
-const showAllCategory = async (req, res) => {
+const showAllCategories = async (req, res) => {
   try {
     const category = await Category.find({}, { name: 1, description: 1 });
     console.log("Category: ", category);
@@ -168,6 +168,6 @@ const categoryPageDetails = async (req, res) => {
 
 module.exports = {
   createCategory,
-  showAllCategory,
+  showAllCategories,
   categoryPageDetails,
 };

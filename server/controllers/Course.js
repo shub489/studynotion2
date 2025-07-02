@@ -14,6 +14,7 @@ const createCourse = async (req, res) => {
       whatYouWillLearn,
       price,
       category,
+      tag,
       // instructor,
       // courseContent,
       // ratingAndReviews,
@@ -71,6 +72,7 @@ const createCourse = async (req, res) => {
     //   resource_type: "auto", // Cloudinary automatically detects the file type (image, video, etc.)
     //   quality: "auto", // Automatically adjust image quality
     // });
+    console.log(tag.split(","));
 
     const newCourse = new Course({
       courseName,
@@ -80,6 +82,8 @@ const createCourse = async (req, res) => {
       price,
       category: categoryDetails._id,
       thumbnail: result.secure_url,
+      tag: tag.split(","),
+      status: "Draft",
       // courseContent,
       // ratingAndReviews,
       // studentsEnrolled,

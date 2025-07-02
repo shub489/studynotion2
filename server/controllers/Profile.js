@@ -1,5 +1,6 @@
 const Profile = require("../models/Profile");
 const User = require("../models/User");
+const { uploadImageToCloudinary } = require("../utils/imageUploader");
 
 const updateProfile = async (req, res) => {
   try {
@@ -11,19 +12,20 @@ const updateProfile = async (req, res) => {
 
     const profileId = user.additionalDetails;
 
-    // const profile = await Profile.findByIdAndUpdate(profileId, req.body, {
-    //   new: true,
-    //   runValidators: true,
-    // });
+    const profile = await Profile.findByIdAndUpdate(profileId, req.body, {
+      new: true,
+      runValidators: true,
+    });
 
-    const profile = await Profile.findById(profileId);
+    // const profile = await Profile.findById(profileId);
 
-    profile.gender = gender;
+    // profile.gender = gender;
 
-    await profile.save();
+    // await profile.save();
 
     return res.status(200).json({
       success: true,
+      message: "Profile updated succesfully",
       profile,
     });
   } catch (error) {
@@ -61,9 +63,39 @@ const getAllUserDetails = async (req, res) => {
   }
 };
 
+const updateDisplayPicture = async (req, res) => {
+  try {
+    console.log(req.file);
+    const result = await uploadImageToCloudinary(req.file.path);
+    console.log(result);
+    const id = req.user.id;
+
+    const updatedUser = await User.findByIdAndUpdate(
+      id,
+      {
+        $set: { image: result.secure_url },
+      },
+      { new: true }
+    );
+
+    return res.status(200).json({
+      success: true,
+      message: "Display picture updated successfully",
+      user: updatedUser,
+    });
+  } catch (error) {
+    console.log("Error: ", error);
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error",
+    });
+  }
+};
+
 // TODO: Delete user
 
 module.exports = {
   updateProfile,
   getAllUserDetails,
+  updateDisplayPicture,
 };

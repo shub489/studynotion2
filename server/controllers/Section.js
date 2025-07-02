@@ -1,5 +1,6 @@
 const Section = require("../models/Section");
 const Course = require("../models/Course");
+const SubSection = require("../models/SubSection");
 
 const createSection = async (req, res) => {
   try {
@@ -100,9 +101,20 @@ const deleteSection = async (req, res) => {
       });
     }
 
-    const section = await Section.findByIdAndDelete(sectionId);
+    const section = await Section.findById(sectionId);
 
-    if (!section) {
+    const subSectionsToBeDeletedArr = section.subSection;
+
+    if (subSectionsToBeDeletedArr.length) {
+      // Deleting subsection
+      const deletedSubsection = await SubSection.deleteMany({
+        _id: { $in: subSectionsToBeDeletedArr },
+      });
+    }
+
+    const deletedSection = await Section.findByIdAndDelete(sectionId);
+
+    if (!deletedSection) {
       return res.status(404).json({
         success: false,
         message: "No section found",

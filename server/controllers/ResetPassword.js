@@ -43,11 +43,14 @@ const resetPasswordToken = async (req, res) => {
 
     const updatedDetails = await User.findOneAndUpdate(
       { email },
-      { token: token, resetPasswordExpires: Date.now() + 5 * 60 * 1000 },
+      {
+        token: token,
+        resetPasswordExpires: new Date(Date.now() + 5 * 60 * 1000),
+      },
       { new: true }
     );
 
-    // Code - To get email template and send as an body to mail sender
+    //  Code - To get email template and send as an body to mail sender
 
     const templatePath = path.join(
       __dirname,
