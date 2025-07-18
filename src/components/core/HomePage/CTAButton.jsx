@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
-const className = (props) => {
+const CTAButton = (props) => {
   const text = props.text;
   const className = props.className;
   const linkto = props.linkto;
@@ -16,4 +16,4 @@ const className = (props) => {
   );
 };
 
-export default className;
+export default CTAButton;
