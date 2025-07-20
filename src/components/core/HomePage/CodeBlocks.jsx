@@ -17,7 +17,7 @@ const CodeBlocks = () => {
         <p>10</p>
         <p>11</p>
       </div>
-      <div class="w-[95%]  font-bold text-brown-100">
+      <div className="w-[95%]  font-bold text-brown-100">
         <p className="text-brown-100">&lt;!DOCTYPE html&gt;</p>
         <p>&lt;html&gt;</p>
         <p>&nbsp;&nbsp;&lt;head&gt;&lt;title&gt;Example&lt;/title&gt;</p>

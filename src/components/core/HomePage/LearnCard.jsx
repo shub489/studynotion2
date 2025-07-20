@@ -2,12 +2,18 @@ import React from "react";
 import { FaUserFriends } from "react-icons/fa";
 import { PiVectorThreeBold } from "react-icons/pi";
 
-const LearnCard = ({ heading, description, dark }) => {
+const LearnCard = ({ heading, description, dark, onClick }) => {
   return (
     <div
-      className={`w-full lg:w-[341px]   pt-8 px-8 rounded-lg  ${
-        dark ? "bg-richblack-800" : "bg-richblack-5"
-      }`}
+      onClick={onClick}
+      className={`w-full lg:w-[341px] pt-8 px-8 rounded-lg select-none cursor-pointer
+    ${
+      dark
+        ? "bg-richblack-800 text-richblack-5 "
+        : "bg-richblack-5 text-richblack-900"
+    }
+    transition-colors duration-300 ease-in-out
+  `}
     >
       <div
         className={`font-semibold text-xl mb-3  ${
