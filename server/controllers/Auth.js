@@ -288,4 +288,5 @@ module.exports = {
   sendOTP,
   signUp,
   login,
+  changePassword,
 };

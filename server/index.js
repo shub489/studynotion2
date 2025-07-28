@@ -88,7 +88,7 @@ app.use("/api/v1/payment", paymentRoutes);
 app.use("/api/v1/course", courseRoutes);
 app.use("/api/v1/section", sectionRoutes);
 app.use("/api/v1/sub-section", subSectionRoutes);
-app.use("/api/v1/reset", resetRoutes);
+// app.use("/api/v1/reset", resetRoutes);
 app.use("/api/v1/category", categoryRoutes);
 app.use("/api/v1/rating-and-review", ratingAndReviewRoutes);
 
