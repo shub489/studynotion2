@@ -63,7 +63,7 @@ const showAllCategories = async (req, res) => {
     return res.status(200).json({
       success: true,
       message: "All category found",
-      category,
+      data: category,
     });
   } catch (error) {
     console.log("Error:: ", error);
