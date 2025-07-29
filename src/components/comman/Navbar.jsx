@@ -29,7 +29,7 @@ const Navbar = () => {
   }, []);
 
   return (
-    <div className="w-full bg-richblack-900 mb-8 lg:mb-16 border-b border-richblack-700">
+    <div className="w-full bg-richblack-900  border-b border-richblack-700">
       <div className="max-w-[1440px] mx-4 lg:mx-auto ">
         <div className="max-w-[1260px] mx-auto flex justify-between items-center">
           {/* Logo */}

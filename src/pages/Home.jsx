@@ -17,7 +17,7 @@ import ExploreMore from "../components/core/HomePage/ExploreMore";
 
 const Home = () => {
   return (
-    <div className="w-full">
+    <div className="w-full mt-8 lg:mt-16">
       {/* Section-1 */}
       <div className="w-full bg-richblack-900 mb-8 lg:mb-32">
         <div className="max-w-[1440px] mx-4 lg:mx-auto ">
