@@ -97,6 +97,7 @@ const signUp = async (req, res) => {
     const { error } = userValidationSchema.validate(req.body);
 
     if (error) {
+      await OTP.findOneAndDelete({ email });
       return res.status(400).json({
         success: false,
         message: error.details[0].message,

@@ -11,6 +11,7 @@ const initialState = {
   totalItems: localStorage.getItem("totalItems")
     ? JSON.parse(localStorage.getItem("totalItems"))
     : 0,
+  loading: false,
 };
 
 const cartSlice = createSlice({
@@ -64,9 +65,13 @@ const cartSlice = createSlice({
       localStorage.removeItem("total");
       localStorage.removeItem("totalItems");
     },
+    setLoading(state, action) {
+      state.loading = action.payload;
+    },
   },
 });
 
-export const { addToCart, removeFromCart, resetCart } = cartSlice.actions;
+export const { addToCart, removeFromCart, resetCart, setLoading } =
+  cartSlice.actions;
 
 export default cartSlice.reducer;

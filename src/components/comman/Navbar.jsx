@@ -14,6 +14,8 @@ const Navbar = () => {
   const { user } = useSelector((state) => state.profile);
   const { totalItems } = useSelector((state) => state.cart);
 
+  console.log("token", token);
+
   const [navlinks, setNavlinks] = useState([]);
 
   useEffect(() => {
