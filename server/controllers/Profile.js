@@ -2,6 +2,7 @@ const Profile = require("../models/Profile");
 const User = require("../models/User");
 const { uploadImageToCloudinary } = require("../utils/imageUploader");
 
+/* Mainly - DATE OF BIRTH, MOBILE NO, GENDER, ABOUT */
 const updateProfile = async (req, res) => {
   try {
     const { gender, dateOfBirth, about, contactNumber } = req.body;
@@ -17,6 +18,8 @@ const updateProfile = async (req, res) => {
       runValidators: true,
     });
 
+    user.additionalDetails = profile;
+
     // const profile = await Profile.findById(profileId);
 
     // profile.gender = gender;
@@ -27,6 +30,42 @@ const updateProfile = async (req, res) => {
       success: true,
       message: "Profile updated succesfully",
       profile,
+      user,
+    });
+  } catch (error) {
+    console.log("Error: ", error);
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error",
+    });
+  }
+};
+
+/* Mainly - FIRST NAME AND LAST NAME*/
+const updateUser = async (req, res) => {
+  try {
+    const { firstName, lastName } = req.body;
+    console.log("FIRSTname -", firstName);
+    console.log("LASTname -", lastName);
+
+    const id = req.user.id;
+
+    const user = await User.findById(id).populate("additionalDetails");
+
+    if (firstName) {
+      user.firstName = firstName[0].toUpperCase() + firstName.slice(1);
+    }
+
+    if (lastName) {
+      user.lastName = lastName[0].toUpperCase() + lastName.slice(1);
+    }
+
+    await user.save();
+
+    return res.status(200).json({
+      success: true,
+      message: "User updated succesfully",
+      user,
     });
   } catch (error) {
     console.log("Error: ", error);
@@ -76,7 +115,7 @@ const updateDisplayPicture = async (req, res) => {
         $set: { image: result.secure_url },
       },
       { new: true }
-    );
+    ).populate("additionalDetails");
 
     return res.status(200).json({
       success: true,
@@ -122,6 +161,7 @@ const getEnrolledCourses = async (req, res) => {
 
 module.exports = {
   updateProfile,
+  updateUser,
   getAllUserDetails,
   updateDisplayPicture,
   getEnrolledCourses,

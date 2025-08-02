@@ -14,14 +14,14 @@ const Navbar = () => {
   const { user } = useSelector((state) => state.profile);
   const { totalItems } = useSelector((state) => state.cart);
 
-  console.log("token", token);
+  // console.log("token", token);
 
   const [navlinks, setNavlinks] = useState([]);
 
   useEffect(() => {
     async function fetchNavlinks() {
       const response = await apiConnector("GET", categories.CATEGORIES_API);
-      console.log(response.data.data);
+      // console.log(response.data.data);
       setNavlinks(response.data.data);
     }
 

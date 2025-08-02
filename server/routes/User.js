@@ -19,6 +19,6 @@ router.post("/reset-password-token", resetPasswordToken);
 router.patch("/reset-password", resetPassword);
 
 // TODO: Route for Changing the password
-router.post("/changepassword", auth, changePassword);
+router.patch("/changepassword", auth, changePassword);
 
 module.exports = router;

@@ -1,4 +1,4 @@
-import { Route, Routes } from "react-router-dom";
+import { Navigate, Route, Routes } from "react-router-dom";
 import "./App.css";
 import Home from "./pages/Home";
 import Navbar from "./components/comman/Navbar";
@@ -13,6 +13,10 @@ import ResetPassword from "./pages/ResetPassword";
 import VerifyEmail from "./pages/VerifyEmail";
 import About from "./pages/About";
 import Contact from "./pages/Contact";
+import Dashboard from "./pages/Dashboard";
+import Profile from "./components/core/Dashboard/Profile";
+import { useSelector } from "react-redux";
+import Setting from "./components/core/Dashboard/Setting";
 
 function App() {
   return (
@@ -59,6 +63,14 @@ function App() {
           <Route path="verify-email" element={<VerifyEmail />} />
           <Route path="about" element={<About />} />
           <Route path="contact" element={<Contact />} />
+          <Route path="dashboard" element={<Dashboard />}>
+            <Route index element={<Navigate to="my-profile" replace />} />
+            <Route path="my-profile" element={<Profile />} />
+            <Route path="enrolled-courses" element={<Contact />} />
+            <Route path="purchase-history" element={<About />} />
+            <Route path="setting" element={<Setting />} />
+            <Route path="*" element={<Navigate to="/login" replace />} />
+          </Route>
           <Route path="*" element={<Error />} />
         </Routes>
       </div>

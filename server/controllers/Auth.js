@@ -202,7 +202,10 @@ const login = async (req, res) => {
       });
     }
 
-    const user = await User.findOne({ email });
+    const user = await User.findOne({ email }).populate(
+      "additionalDetails",
+      "gender about dateOfBirth contactNumber"
+    );
 
     if (!user) {
       return res.status(401).json({
@@ -227,7 +230,7 @@ const login = async (req, res) => {
         accountType: user.accountType,
       },
       process.env.JWT_SECRET,
-      { expiresIn: 60 * 60 }
+      { expiresIn: "7d" }
     );
 
     user.jwtToken = jwtToken;
@@ -260,12 +263,12 @@ const login = async (req, res) => {
 
 const changePassword = async (req, res) => {
   try {
-    const { oldPassword, newPassword, confimPassword } = req.body;
+    const { oldPassword, newPassword, confirmPassword } = req.body;
 
     const passwordSchema = Joi.object({
-      oldPassword: Joi.string().min(6).required(),
+      // oldPassword: Joi.string().min(6).required(),
       newPassword: Joi.string().min(6).required(),
-      confimPassword: Joi.string().min(6).required(),
+      confirmPassword: Joi.string().min(6).required(),
     });
 
     const { error } = passwordSchema.validate(req.body);
@@ -276,6 +279,25 @@ const changePassword = async (req, res) => {
         message: error.details[0].message,
       });
     }
+
+    if (newPassword !== confirmPassword) {
+      return res.status(401).json({
+        success: false,
+        message: "Password not matched",
+      });
+    }
+    const id = req.user.id;
+    const user = await User.findById(id).populate("additionalDetails");
+    const hashPassword = await bcrypt.hash(newPassword, 10);
+    user.password = hashPassword;
+    await user.save();
+    user.password = undefined;
+
+    return res.status(201).json({
+      success: true,
+      message: "Password updated successfully",
+      user,
+    });
   } catch (error) {
     return res.status(500).json({
       success: false,

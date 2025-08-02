@@ -31,7 +31,7 @@ const Contact = () => {
       <div className=" p-6 rounded-xl w-full lg:w-[450px] lg:bg-richblack-800 flex flex-col gap-6">
         {data.map((item, index) => {
           return (
-            <div className="flex gap-2 p-3 items-start">
+            <div className="flex gap-2 p-3 items-start" key={index}>
               <div className="w-6 h-6 text-richblack-100  mt-1">
                 {item.icon}{" "}
               </div>

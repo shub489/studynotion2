@@ -4,13 +4,15 @@ const {
   getAllUserDetails,
   updateDisplayPicture,
   getEnrolledCourses,
+  updateUser,
 } = require("../controllers/Profile");
 const { auth } = require("../middlewares/auth");
 const { upload } = require("../utils/multer");
 
 const router = express.Router();
 router.patch("/updateProfile", auth, updateProfile);
-router.get("/getAllUserDetails", auth, getAllUserDetails);
+router.patch("/updateUser", auth, updateUser);
+router.get("/getUserDetails", auth, getAllUserDetails);
 router.patch(
   "/updateDisplayPicture",
   auth,
