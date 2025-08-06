@@ -17,8 +17,12 @@ import Dashboard from "./pages/Dashboard";
 import Profile from "./components/core/Dashboard/Profile";
 import { useSelector } from "react-redux";
 import Setting from "./components/core/Dashboard/Setting";
+import EnrolledCourses from "./components/core/Dashboard/EnrolledCourses";
+import Cart from "./components/core/Dashboard/Cart";
 
 function App() {
+  const user = useSelector((store) => store.profile.user);
+  console.log("user ", user);
   return (
     <div
       className={` w-screen min-h-screen bg-richblack-900 flex flex-col font-inter`}
@@ -66,9 +70,12 @@ function App() {
           <Route path="dashboard" element={<Dashboard />}>
             <Route index element={<Navigate to="my-profile" replace />} />
             <Route path="my-profile" element={<Profile />} />
-            <Route path="enrolled-courses" element={<Contact />} />
+            <Route path="enrolled-courses" element={<EnrolledCourses />} />
             <Route path="purchase-history" element={<About />} />
             <Route path="setting" element={<Setting />} />
+            {user.accountType === "Student" && (
+              <Route path="cart" element={<Cart />} />
+            )}
             <Route path="*" element={<Navigate to="/login" replace />} />
           </Route>
           <Route path="*" element={<Error />} />

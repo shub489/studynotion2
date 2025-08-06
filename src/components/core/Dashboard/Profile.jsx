@@ -9,7 +9,6 @@ const Profile = () => {
   const user = useSelector((state) => state.profile.user);
   const navigate = useNavigate();
   const location = useLocation();
-  console.log("Location", location);
 
   return (
     <div className=" text-richblack-5 pt-6 ">
@@ -93,8 +92,10 @@ const Profile = () => {
           <div>
             <p className="text-sm font-normal text-richblack-400">Gender</p>
             <p className="font-medium text-sm text-richblack-5">
-              {user.additionalDetails.gender.charAt(0).toUpperCase() +
-                user.additionalDetails.gender.slice(1) || "Add Gender"}
+              {user.additionalDetails?.gender
+                ? user.additionalDetails.gender.charAt(0).toUpperCase() +
+                    user.additionalDetails.gender.slice(1) || "Add Gender"
+                : "Add Gender"}
             </p>
           </div>
           {/* Right Column */}

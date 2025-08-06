@@ -24,8 +24,6 @@ const VerifyEmail = () => {
   function handleSubmit(e) {
     e.preventDefault();
 
-    console.log("Handle submit called", otp);
-    console.log({ ...signupData }, otp, navigate);
     dispatch(
       signUp({
         ...signupData,

@@ -20,7 +20,6 @@ const Sidebar = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  // console.log("user:", user);
   return (
     <div>
       {sidebarLinks.map((link, index) => {
