@@ -7,6 +7,7 @@ const RatingAndReview = require("../models/RatingAndReview");
 require("dotenv").config();
 
 const createCourse = async (req, res) => {
+  console.log("req.body ", req.body);
   try {
     const {
       courseName,
@@ -15,6 +16,7 @@ const createCourse = async (req, res) => {
       price,
       category,
       tag,
+      instructions,
       // instructor,
       // courseContent,
       // ratingAndReviews,
@@ -80,6 +82,7 @@ const createCourse = async (req, res) => {
       instructor: instructorDetails._id,
       whatYouWillLearn,
       price,
+      instructions: instructions,
       category: categoryDetails._id,
       thumbnail: result.secure_url,
       tag: tag.split(","),
