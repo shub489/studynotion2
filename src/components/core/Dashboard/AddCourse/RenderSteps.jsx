@@ -25,7 +25,7 @@ const RenderSteps = () => {
   return (
     <div>
       {/* Steps */}
-      <div className=" w-[665px] flex justify-between">
+      <div className=" w-[665px] flex justify-between mb-8">
         {steps.map((currentStep) => {
           return (
             <div

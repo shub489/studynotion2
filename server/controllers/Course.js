@@ -24,6 +24,8 @@ const createCourse = async (req, res) => {
       // studentsEnrolled,
     } = req.body;
 
+    console.log("Instructions", instructions);
+
     if (
       !courseName ||
       !courseDescription ||
@@ -82,7 +84,7 @@ const createCourse = async (req, res) => {
       instructor: instructorDetails._id,
       whatYouWillLearn,
       price,
-      instructions: instructions,
+      instructions: JSON.parse(instructions),
       category: categoryDetails._id,
       thumbnail: result.secure_url,
       tag: tag.split(","),

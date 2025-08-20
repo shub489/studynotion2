@@ -1,3 +1,4 @@
+const Course = require("../models/Course.js");
 const Section = require("../models/Section");
 
 const SubSection = require("../models/SubSection.js");
@@ -105,9 +106,20 @@ const deleteSubsection = async (req, res) => {
       $pull: { subSection: subSectionId },
     });
 
+    const updateCourse = await Course.find({
+      courseContent: sectionId,
+    }).populate({
+      path: "courseContent",
+      populate: {
+        path: "subSection",
+        model: "SubSection",
+      },
+    });
+
     res.status(200).json({
       success: true,
       message: "Subsection deleted successfully",
+      course: updateCourse,
     });
   } catch (error) {
     console.log(error);

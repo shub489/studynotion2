@@ -38,7 +38,7 @@ const ConfirmationModal = ({
   }, []);
 
   return (
-    <>
+    <div>
       {/* Div for blur background */}
       <div className="fixed inset-0 backdrop-blur-sm z-10"></div>
 
@@ -72,7 +72,7 @@ const ConfirmationModal = ({
           <IoMdClose className="w-[30px] h-[30px]" />
         </div>
       </div>
-    </>
+    </div>
   );
 };
 

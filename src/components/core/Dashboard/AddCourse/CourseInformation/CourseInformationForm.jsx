@@ -124,10 +124,13 @@ const CourseInformationForm = () => {
       setValue("courseShortDesc", course.courseDescription);
       setValue("coursePrice", course.price);
       setValue("courseTags", course.tag);
+      setTags(course.tag);
       setValue("courseBenefits", course.whatYouWillLearn);
       setValue("courseCategory", course.category);
       setValue("courseRequirements", course.instructions);
+      setRequirementArray(course.instructions);
       setValue("courseImage", course.thumbnail);
+      setPreviewUrl(course.thumbnail);
     }
 
     getCategories();
@@ -137,7 +140,7 @@ const CourseInformationForm = () => {
   // REVIEW: If edit the course
   useEffect(() => {
     if (!file) {
-      setPreviewUrl("");
+      if (!editCourse) setPreviewUrl("");
       return;
     }
 
@@ -214,7 +217,7 @@ const CourseInformationForm = () => {
         let result = await editCourseDetails(formData, token);
         setLoading(false);
         if (result) {
-          setStep(2);
+          dispatch(setStep(2));
           dispatch(setCourse(result));
         }
       } else {
@@ -231,7 +234,7 @@ const CourseInformationForm = () => {
       formData.append("category", data.courseCategory);
       // formData.append("instructions", JSON.stringify(data.courseRequirements));
       formData.append("instructions", JSON.stringify(data.courseRequirements));
-      formData.append("tag", data.courseTags);
+      formData.append("tag", JSON.stringify(data.courseTags));
       formData.append("thumbnail", data.courseImage);
       formData.append("status", COURSE_STATUS.DRAFT);
 
@@ -440,6 +443,7 @@ const CourseInformationForm = () => {
                   onClick={() => {
                     setFile(null);
                     setValue("courseImage", null);
+                    setPreviewUrl("");
                   }}
                   className="text-richblack-5"
                 >

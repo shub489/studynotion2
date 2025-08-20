@@ -25,19 +25,25 @@ const createSection = async (req, res) => {
       });
     }
 
-    const updatedCourseDetails = await Course.findByIdAndUpdate(
+    const updatedCourse = await Course.findByIdAndUpdate(
       courseId,
       {
         $push: { courseContent: section._id },
       },
       { new: true }
-    );
+    ).populate({
+      path: "courseContent", // populate courseContent (Sections)
+      populate: {
+        path: "subSection", // populate subSection inside Section
+        model: "SubSection",
+      },
+    });
 
     return res.status(201).json({
       success: true,
       message: "Section created successfully",
       section,
-      updatedCourseDetails,
+      updatedCourse,
     });
 
     // End
@@ -52,7 +58,9 @@ const createSection = async (req, res) => {
 
 const updateSection = async (req, res) => {
   try {
-    const { sectionName, sectionId } = req.body;
+    const { sectionName, sectionId, courseId } = req.body;
+
+    console.log("Request.body for updateSection", updateSection);
 
     // validation
     if (!sectionName || !sectionId) {
@@ -74,10 +82,21 @@ const updateSection = async (req, res) => {
     section.sectionName = sectionName;
     await section.save();
 
+    const updatedCourse = await Course.findOne({
+      courseContent: sectionId,
+    }).populate({
+      path: "courseContent",
+      populate: {
+        path: "subSection",
+        model: "SubSection",
+      },
+    });
+
     return res.status(201).json({
       success: true,
       message: "Section updated successfully",
       section,
+      updatedCourse,
     });
 
     // End
@@ -121,13 +140,19 @@ const deleteSection = async (req, res) => {
       });
     }
 
-    const course = await Course.updateMany(
+    const updatedCourse = await Course.findOneAndUpdate(
       { courseContent: sectionId }, // Find courses that have the sectionId
       { $pull: { courseContent: sectionId } },
-      { new: true } // Remove it
-    );
+      { new: true }
+    ).populate({
+      path: "courseContent",
+      populate: {
+        path: "subSection",
+        model: "SubSection",
+      },
+    });
 
-    if (!course) {
+    if (!updatedCourse) {
       return res.status(404).json({
         success: false,
         message: "No course found",
@@ -135,8 +160,9 @@ const deleteSection = async (req, res) => {
     }
 
     return res.status(200).json({
-      success: false,
+      success: true,
       message: "Section deleted successfully",
+      updatedCourse,
     });
   } catch (error) {
     return res.status(500).json({
