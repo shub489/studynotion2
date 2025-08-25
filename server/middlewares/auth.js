@@ -51,7 +51,6 @@ const isStudent = (req, res, next) => {
 
 //isInstructor
 const isInstructor = (req, res, next) => {
-  console.log("accountType", req.user.accountType);
   if (req?.user?.accountType === "Instructor") {
     return next();
   }

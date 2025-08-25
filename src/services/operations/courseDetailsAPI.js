@@ -160,9 +160,23 @@ export const createSubSection = async (data, token) => {
   let result = null;
   const toastId = toast.loading("Loading...");
   try {
-    const response = await apiConnector("POST", CREATE_SUBSECTION_API, data, {
-      Authorization: `Bearer ${token}`,
-    });
+    const response = await apiConnector(
+      "POST",
+      CREATE_SUBSECTION_API,
+      data,
+      {
+        Authorization: `Bearer ${token}`,
+      },
+      {},
+      {
+        onUploadProgress: (progressEvent) => {
+          const percentCompleted = Math.round(
+            (progressEvent.loaded * 100) / progressEvent.total
+          );
+          toast.loading(`Uploading ${percentCompleted}%...`, { id: toastId });
+        },
+      }
+    );
     console.log("CREATE SUB-SECTION API RESPONSE............", response);
     if (!response?.data?.success) {
       throw new Error("Could Not Add Lecture");
@@ -200,13 +214,46 @@ export const updateSection = async (data, token) => {
 };
 
 // update a subsection
+// export const updateSubSection = async (data, token) => {
+//   let result = null;
+//   const toastId = toast.loading("Loading...");
+//   try {
+//     const response = await apiConnector("POST", UPDATE_SUBSECTION_API, data, {
+//       Authorization: `Bearer ${token}`,
+//     });
+//     console.log("UPDATE SUB-SECTION API RESPONSE............", response);
+//     if (!response?.data?.success) {
+//       throw new Error("Could Not Update Lecture");
+//     }
+//     toast.success("Lecture Updated");
+//     result = response?.data?.data;
+//   } catch (error) {
+//     console.log("UPDATE SUB-SECTION API ERROR............", error);
+//     toast.error(error.message);
+//   }
+//   toast.dismiss(toastId);
+//   return result;
+// };
 export const updateSubSection = async (data, token) => {
   let result = null;
   const toastId = toast.loading("Loading...");
   try {
-    const response = await apiConnector("POST", UPDATE_SUBSECTION_API, data, {
-      Authorization: `Bearer ${token}`,
-    });
+    const response = await apiConnector(
+      "POST",
+      UPDATE_SUBSECTION_API,
+      data,
+      { Authorization: `Bearer ${token}` },
+      {},
+      {
+        onUploadProgress: (progressEvent) => {
+          const percentCompleted = Math.round(
+            (progressEvent.loaded * 100) / progressEvent.total
+          );
+          toast.loading(`Uploading ${percentCompleted}%...`, { id: toastId });
+        },
+      }
+    );
+
     console.log("UPDATE SUB-SECTION API RESPONSE............", response);
     if (!response?.data?.success) {
       throw new Error("Could Not Update Lecture");

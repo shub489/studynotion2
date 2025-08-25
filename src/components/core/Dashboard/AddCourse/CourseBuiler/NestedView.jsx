@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RxDropdownMenu } from "react-icons/rx";
 import { MdEdit } from "react-icons/md";
@@ -62,6 +62,8 @@ const NestedView = ({
     // setShow(false);
   }
 
+  useEffect(() => {}, [addSubSection, viewSubSection, editSubSection]);
+
   return (
     <div>
       <div className="max-w-[617px]  mx-auto rounded-lg border border-richblack-600 px-6">
@@ -69,7 +71,7 @@ const NestedView = ({
           return (
             <details key={section._id}>
               {/* <summary>{section.sectionName}</summary> */}
-              <summary className=" border-b border-richblack-600 py-3 text-richblack-700 flex">
+              <summary className=" border-b border-richblack-600 py-3 text-richblack-700 flex ">
                 <div className=" w-9/12 flex items-center gap-2 cursor-pointer">
                   <RxDropdownMenu className=" w-5 h-5 text-richblack-50" />
                   <p className=" font-semibold text-richblack-50">
@@ -101,11 +103,12 @@ const NestedView = ({
                 </div>
               </summary>
 
-              {sectionData.map((data, index) => {
+              {/* {sectionData.map((data, index) => { */}
+              {section?.subSection?.map((data, index) => {
                 return (
                   <div
                     key={index}
-                    className=" py-3 pl-6 flex justify-between border-b border-richblack-600"
+                    className=" py-3 pl-6 flex justify-between border-b border-richblack-600 cursor-pointer"
                     onClick={() => setViewSubSection(data)}
                   >
                     <div className=" flex gap-3 ">
@@ -116,15 +119,20 @@ const NestedView = ({
                     </div>
                     <div className="text-richblack-400 flex items-center gap-2">
                       <button
-                        onClick={() =>
-                          setEditSubSection({ ...data, sectionId: section._id })
-                        }
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setEditSubSection({
+                            ...data,
+                            sectionId: section._id,
+                          });
+                        }}
                       >
                         <MdEdit className=" w-5 h-5" />
                       </button>
 
                       <button
-                        onClick={() => {
+                        onClick={(e) => {
+                          e.stopPropagation();
                           handleDeleteSubSection(data._id, section._id);
                         }}
                       >
@@ -136,7 +144,11 @@ const NestedView = ({
               })}
               <div className="py-3 flex gap-1 items-center text-yellow-50 font-medium">
                 <HiOutlinePlus className="font-bold " />
-                <button onClick={() => setAddSubSection(section._id)}>
+                <button
+                  onClick={() => {
+                    setAddSubSection(section._id);
+                  }}
+                >
                   Add Lecture
                 </button>
               </div>
@@ -167,6 +179,7 @@ const NestedView = ({
           setModalData={setAddSubSection}
           subSectionModalRef={subSectionModalRef}
           add={true}
+          setAddSubSection={setAddSubSection}
         />
       ) : editSubSection ? (
         <SubSectionModal
@@ -174,6 +187,7 @@ const NestedView = ({
           setModalData={setEditSubSection}
           subSectionModalRef={subSectionModalRef}
           edit={true}
+          setEditSubSection={setEditSubSection}
         />
       ) : viewSubSection ? (
         <SubSectionModal
@@ -181,20 +195,11 @@ const NestedView = ({
           setModalData={setViewSubSection}
           subSectionModalRef={subSectionModalRef}
           view={true}
+          setViewSubSection={setViewSubSection}
         />
       ) : (
         <div> </div>
       )}
-
-      {/* {addSubSection ? (
-        <SubSectionModal
-          modalData={addSubSection}
-          setModalData={setAddSubSection}
-          subSectionModalRef={subSectionModalRef}
-        />
-      ) : (
-        <div> </div>
-      )} */}
     </div>
   );
 };

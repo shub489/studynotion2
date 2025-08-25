@@ -8,6 +8,7 @@ const createSubsection = async (req, res) => {
   try {
     const { title, timeDuration, description, sectionId } = req.body;
 
+    console.log("req.body ----> ", req.body);
     console.log("req.file : ", req.file);
     console.log("title : ", title);
     console.log("timeDuration : ", timeDuration);
@@ -39,10 +40,22 @@ const createSubsection = async (req, res) => {
       { new: true }
     );
 
+    const updatedCourse = await Course.findOneAndUpdate(
+      { courseContent: sectionId }, // Find courses that have the sectionId
+      { new: true }
+    ).populate({
+      path: "courseContent",
+      populate: {
+        path: "subSection",
+        model: "SubSection",
+      },
+    });
+
     return res.status(200).json({
       success: true,
       message: "Subsection created successfully",
       subSection,
+      data: updatedCourse,
     });
   } catch (error) {
     console.log(error);
@@ -57,13 +70,15 @@ const updateSubsection = async (req, res) => {
   try {
     const { subSectionId } = req.body;
 
-    req.body.subSectionId = undefined;
+    // req.body.subSectionId = undefined;
 
     let resultCloudinary;
-    if (req.file.path) {
+    let updates = { ...req.body };
+    console.log("req.file.path ", req.file?.path);
+    if (req.file?.path) {
       resultCloudinary = await uploadImageToCloudinary(req.file.path);
+      updates = { ...req.body, videoUrl: resultCloudinary.secure_url };
     }
-    const updates = { ...req.body, videoUrl: resultCloudinary.secure_url };
 
     let updatedSubsection = await SubSection.findByIdAndUpdate(
       subSectionId,
@@ -74,10 +89,39 @@ const updateSubsection = async (req, res) => {
       }
     );
 
+    // 2. Find Section which contains this SubSection
+    const section = await Section.findOne({ subSection: subSectionId });
+    if (!section) {
+      return res.status(404).json({
+        success: false,
+        message: "Section not found",
+      });
+    }
+
+    // 3. Find Course which contains this Section
+    const course = await Course.findOne({ courseContent: section._id })
+      .populate({
+        path: "courseContent",
+        populate: {
+          path: "subSection",
+          model: "SubSection",
+        },
+      })
+      .exec();
+
+    if (!course) {
+      return res.status(404).json({
+        success: false,
+        message: "Course not found",
+      });
+    }
+
+    // 4. Send populated course data
     res.status(200).json({
       success: true,
-      message: "Sub section updated successfully",
+      message: "SubSection updated successfully",
       updatedSubsection,
+      data: course,
     });
   } catch (error) {
     console.log(error);
@@ -106,7 +150,7 @@ const deleteSubsection = async (req, res) => {
       $pull: { subSection: subSectionId },
     });
 
-    const updateCourse = await Course.find({
+    const updateCourse = await Course.findOne({
       courseContent: sectionId,
     }).populate({
       path: "courseContent",
